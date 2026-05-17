@@ -1,0 +1,52 @@
+hydra:
+  searchpath:
+    - file://verl/trainer/config
+
+defaults:
+  - ppo_trainer
+  - _self_
+
+data:
+  gen_batch_size: ${data.train_batch_size}
+
+reward_model:
+  reward_manager: dapo
+  overlong_buffer: 
+    enable: False # We try to avoid forgetting to set enable
+    len: 0
+    penalty_factor: 0.0
+    log: False
+
+algorithm:
+  filter_groups:
+    _target_: verl.trainer.config.FilterGroupsConfig
+    enable: False # We try to avoid forgetting to set enable
+    metric: null # acc / score / seq_reward / seq_final_reward / ...
+    max_num_gen_batches: 0 # Non-positive values mean no upper limit
+
+trainer:
+  project_name: verl-dapo
+
+self_debate:
+  enable_debate_training: True
+  partner_mode: frequency # frequency | random
+  debate_n: 4 # debate num generation per prompt
+  num_debate_prompt: 0 # Non-positive values mean no limit
+  train_debate_max_initial_response_length: 2048
+  test_debate_max_initial_response_length: 8192
+  enable_second_turn_eval: True
+  second_turn_advantage: grpo
+
+# # Multi-turn interaction config (used when multi_turn is enabled for rollout).
+# actor_rollout_ref:
+#   rollout:
+#     multi_turn:
+#       enable: True
+#       max_assistant_turns: 2
+#       interaction_config_path: ${hydra:runtime.cwd}/verl/recipe/self-debate/config/dapo_trainer.yaml
+
+# # Interaction definitions (consumed by interaction_config_path above).
+# interaction:
+#   - name: "self_debate"
+#     class_name: "verl.recipe.self-debate.self_debate_interaction.SelfDebateInteraction"
+#     config: {}

@@ -1,0 +1,3 @@
+Copyright 2023-2024 Bytedance Ltd. and/or its affiliates 
+SDRL modifications Copyright 2026 Chenxi Liu.
+This repository contains modifications to volcengine/verl for Self-Debate Reinforcement Learning.
